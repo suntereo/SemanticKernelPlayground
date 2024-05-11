@@ -1,17 +1,19 @@
 import subprocess
-from semantic_kernel.skill_definition import sk_function
+from typing import Annotated
+from semantic_kernel.functions import kernel_function
 import os
 import whisper
 import torch  
 
 class AudioVideo:
 
-    @sk_function(
+    @kernel_function(
         description="extract audio in wav format from an mp4 file",
         name="ExtractAudio",
-        input_description="Full path to the mp4 file",
     )
-    def extract_audio(self, videofile: str) -> str:
+    def extract_audio(
+        self, 
+        videofile: Annotated[str, "Full path to the mp4 file"]) -> Annotated[str, "output audio file path"]:
         """
         Extract audio from a video file and return the full path to the extracted file.
 
@@ -33,12 +35,13 @@ class AudioVideo:
         # now ffmpeg has created the audio file, return the path to it
         return audio_path
 
-    @sk_function(
+    @kernel_function(
         description="Transcript audio from a wav file to a timeline",
         name="TranscriptTimeline",
-        input_description="Full path to the wav file",
     )
-    def transcript_timeline(self, audiofile: str) -> str:
+    def transcript_timeline(
+        self, 
+        audiofile: Annotated[str, "Full path to the wav file"]) -> str:
 
         """
         Extract a transcript from an audio file and return a transcript file that
@@ -47,7 +50,7 @@ class AudioVideo:
         :param audiofile: Full path to the wav file 
         :return: transcripted text with start and end time
         """
-        model: str =  "medium.en" #"large-v3" #"medium.en"
+        model: str =  "medium.en" ##"tiny.en" #"large-v3" #"medium.en"
         print(f"Extracting transcript from audio file {audiofile}")
         # model = whisper.load_model("medium.en")
 
